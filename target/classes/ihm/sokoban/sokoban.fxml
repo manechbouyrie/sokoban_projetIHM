@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ihm.sokoban.util.SokobanController"
+            stylesheets="@style.css">
+
+    <!-- Barre du haut : infos niveau -->
+    <top>
+        <VBox styleClass="top-bar">
+            <Label fx:id="labelNiveau" text="Niveau 1" styleClass="titre-niveau"/>
+            <HBox spacing="20">
+                <Label fx:id="labelMouvements" text="Mouvements : 0"/>
+                <Label fx:id="labelPoussees"   text="Poussées : 0"/>
+                <Label fx:id="labelCaisses"    text="Caisses : 0/0"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Centre : la grille de jeu -->
+    <center>
+        <StackPane fx:id="stackPlateau">
+            <GridPane fx:id="grillePlateau" alignment="CENTER"/>
+            <!-- Overlay victoire/défaite -->
+            <VBox fx:id="overlayMessage" visible="false"
+                  alignment="CENTER" styleClass="overlay">
+                <Label fx:id="labelMessage" styleClass="message-fin"/>
+                <Button fx:id="btnAction" text="Niveau suivant"
+                        onAction="#onNiveauSuivant"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <!-- Bas : boutons -->
+    <bottom>
+        <HBox spacing="10" alignment="CENTER" style="-fx-padding:8;">
+            <Button text="↩ Annuler"      onAction="#onAnnuler"/>
+            <Button text="🔄 Recommencer" onAction="#onRecommencer"/>
+            <Button text="❮ Précédent"    onAction="#onPrecedent"/>
+            <Button text="Suivant ❯"      onAction="#onSuivant"/>
+            <Button text="Quitter"        onAction="#onQuitter"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
