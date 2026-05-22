@@ -70,8 +70,8 @@ public class menuController implements Initializable{
     private void onRegle(){
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setTitle("Règles du jeu");
-    alert.setHeaderText("Sokoban - IHM 2026");
-    alert.setContentText("Chai pas ... j'm'appelle tom l'hamster...............");
+    alert.setHeaderText("Fo trouver");
+    alert.setContentText("Chai pas ... En tout cas moi c'est tom le hamster...");
 
     var resource = getClass().getResourceAsStream("/ihm/sokoban/image/regle.jpg");
 

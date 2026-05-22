@@ -50,7 +50,7 @@
         <items>
             <MenuBar>
               <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Jeu">
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#lauchTutoriel" text="Niveau tutoriel" />
                         <MenuItem mnemonicParsing="false" onAction="#lauchSokoban" text="Niveau sokoban" />
@@ -58,7 +58,7 @@
                     <MenuItem mnemonicParsing="false" onAction="#onQuitter" text="Quiter" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu mnemonicParsing="false" text="Aide">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#onRegle" text="Règle" />
                   </items>
