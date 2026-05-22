@@ -1,42 +1,220 @@
-.case-mur    { -fx-background-image: url("/ihm/sokoban/image/mur.jpg");
-    -fx-background-size: 80px 80px;  /* largeur hauteur */
+/* =====================================================
+   SOKOBAN — Feuille de style principale
+   Palette calée sur les assets visuels :
+     - Mur   : pixel-art gris pierre  → fond grille #78909c
+     - Caisse: bois clair beige/brun  → sol #f5ecd7
+     - Joueur: hamster fond blanc     → sol cohérent
+   ===================================================== */
+
+/* =====================================================
+   CASES DU PLATEAU
+   ===================================================== */
+
+.case-mur {
+    -fx-background-image: url("/ihm/sokoban/image/mur.jpg");
+    -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-min-width: 64px;
-    -fx-min-height: 64px;  }
-.case-sol    { -fx-background-color: #ffffff; }
-.case-vide   { -fx-background-color: transparent; }
-.case-cible  { -fx-background-color: #c8e6c9;
-               -fx-border-color: #388e3c; -fx-border-width: 2; }
-.case-caisse { -fx-background-image: url("/ihm/sokoban/image/caisse.jpg");
-    -fx-background-size: 80px 80px;  /* largeur hauteur */
+}
+
+.case-caisse {
+    -fx-background-color: #f5ecd7;          /* fond beige bois pour la caisse */
+    -fx-background-image: url("/ihm/sokoban/image/caisse.jpg");
+    -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-min-width: 64px;
-    -fx-min-height: 64px; }
-.case-caisse-ok { -fx-background-color: #43a047;
-                  -fx-border-color: #1b5e20; -fx-border-width: 2; }
+}
+
+.case-joueur {
+    -fx-background-color: #f5ecd7;          /* même sol que la caisse */
+    -fx-background-image: url("/ihm/sokoban/image/joueur.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+/* Sol : beige chaud assorti au bois de la caisse */
+.case-sol {
+    -fx-background-color: #f5ecd7;
+}
+
+/* Vide (extérieur du niveau) : gris pierre assorti au mur pixel */
+.case-vide {
+    -fx-background-color: #78909c;
+}
+
+/* Cible : cercle vert vif sur fond sol */
+.case-cible {
+    -fx-background-color: #f5ecd7;
+    -fx-border-color: #43a047;
+    -fx-border-width: 3;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+/* Caisse arrivée sur cible : vert + image caisse teintée */
+.case-caisse-ok {
+    -fx-background-color: linear-gradient(to bottom right, #a5d6a7, #2e7d32);
+    -fx-border-color: #1b5e20;
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+
+/* =====================================================
+   OVERLAY VICTOIRE
+   ===================================================== */
 
 .overlay {
     -fx-background-image: url("/ihm/sokoban/image/gagner.jpg");
-    -fx-background-size: 700px 700px;  /* largeur hauteur */
+    -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-background-color: #ffffff;
-    -fx-padding: 30;
-    -fx-spacing: 15;
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-padding: 40;
+    -fx-spacing: 20;
     -fx-min-width: 64px;
     -fx-min-height: 64px;
+    -fx-alignment: center;
 }
-.message-fin { -fx-font-size: 22; -fx-text-fill: white; -fx-font-weight: bold; }
-.titre-niveau { -fx-font-size: 16; -fx-font-weight: bold; }
-.top-bar { -fx-padding: 8; -fx-spacing: 4; -fx-background-color: #ffffff;
-           -fx-text-fill: white; }
 
-.case-joueur { -fx-background-image: url("/ihm/sokoban/image/joueur.jpg");
-    -fx-background-size: 75px 75px;  /* largeur hauteur */
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-    -fx-min-width: 64px;
-    -fx-min-height: 64px;
+.message-fin {
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, black, 6, 0.6, 0, 1);
+}
+
+/* =====================================================
+   BARRE DU HAUT
+   Marron bois sombre pour s'accorder avec la caisse
+   ===================================================== */
+
+.top-bar {
+    -fx-background-color: linear-gradient(to right, #4e342e, #6d4c41);
+    -fx-padding: 10 16;
+    -fx-spacing: 4;
+}
+
+.titre-niveau {
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffecb3;
+}
+
+.top-bar Label {
+    -fx-text-fill: #ffe0b2;
+    -fx-font-size: 12;
+}
+
+/* =====================================================
+   BARRE DU BAS (boutons de jeu)
+   ===================================================== */
+
+.bottom-bar, .bottom-bar HBox {
+    -fx-background-color: #efebe9;
+    -fx-padding: 8 12;
+    -fx-spacing: 8;
+    -fx-border-color: #bcaaa4;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* Boutons génériques */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #fff8e1, #ffe082);
+    -fx-border-color: #795548;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 6 14;
+    -fx-font-size: 13;
+    -fx-text-fill: #3e2723;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 3, 0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffe082, #ffb300);
+    -fx-border-color: #4e342e;
+    -fx-text-fill: #1a0000;
+}
+
+.button:pressed {
+    -fx-background-color: #ffb300;
+    -fx-effect: none;
+    -fx-translate-y: 1;
+}
+
+/* Bouton "Niveau suivant" dans l'overlay victoire */
+.overlay .button {
+    -fx-background-color: linear-gradient(to bottom, #ffd54f, #ff8f00);
+    -fx-border-color: #e65100;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #3e2723;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+    -fx-padding: 10 24;
+}
+
+.overlay .button:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffe082, #ffa000);
+    -fx-border-color: #bf360c;
+}
+
+/* =====================================================
+   MENU PRINCIPAL
+   Palette bois/entrepôt assortie aux assets
+   ===================================================== */
+
+.root {
+    -fx-background-color: #efebe9;
+}
+
+/* Barre de menu */
+.menu-bar {
+    -fx-background-color: #4e342e;
+    -fx-padding: 2;
+}
+
+.menu-bar .menu .label {
+    -fx-text-fill: #ffecb3;
+}
+
+.menu-bar .menu:hover,
+.menu-bar .menu:showing {
+    -fx-background-color: #6d4c41;
+}
+
+.context-menu {
+    -fx-background-color: #4e342e;
+    -fx-border-color: #6d4c41;
+    -fx-border-width: 1;
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+}
+
+.menu-item .label {
+    -fx-text-fill: #ffecb3;
+}
+
+.menu-item:focused,
+.menu-item:hover {
+    -fx-background-color: #6d4c41;
+}
+
+/* =====================================================
+   SCROLLPANE
+   ===================================================== */
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
 }

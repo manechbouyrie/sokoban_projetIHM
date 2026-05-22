@@ -37,64 +37,82 @@ public class SokobanController implements Initializable{
     // --- Modèle ---
     private JeuSokoban jeu;
 
+    /** Empêche sizeToScene() d'être rappelé à chaque rafraîchissement de grille */
+    private boolean premiereAffichage = true;
+
     private static final int TAILLE_CASE = 64; // pixels
 
     // ========== Affichage de la grille ==========
 
     private void afficherGrille() {
-        grillePlateau.getChildren().clear();
-        grillePlateau.getColumnConstraints().clear();
-        grillePlateau.getRowConstraints().clear();
+    if (jeu == null || grillePlateau.getScene() == null) return;
 
-        int lignes = jeu.getNbLignes();
-        int cols   = jeu.getNbColonnes();
+    grillePlateau.getChildren().clear();
+    grillePlateau.getColumnConstraints().clear();
+    grillePlateau.getRowConstraints().clear();
 
-        // Contraintes de taille fixe par case
+    int lignes = jeu.getNbLignes();
+    int cols   = jeu.getNbColonnes();
+
+    if ((lignes == 0 || cols == 0) || (lignes > 100 || cols > 100)) {
+        var resource = getClass().getResourceAsStream("/ihm/sokoban/image/marchepas.jpg");
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Le niveau est trop grand ou vide !");
+            alert.setHeaderText(null);
+            ImageView imageView = new ImageView(new Image(resource));
+            imageView.setFitWidth(150);
+            imageView.setFitHeight(150);
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+        onNiveauSuivant();
+    }
+
+    // Hauteur dispo = scène - barre haut (~60) - barre bas (~50)
+    double largeur    = grillePlateau.getScene().getWidth();
+    double hauteur    = grillePlateau.getScene().getHeight() - 110;
+    double tailleCase = Math.min(largeur / cols, hauteur / lignes);
+
+    // Taille minimale pour éviter des cases invisibles
+    tailleCase = Math.max(tailleCase, 32);
+
+    for (int c = 0; c < cols; c++) {
+        ColumnConstraints cc = new ColumnConstraints(tailleCase);
+        grillePlateau.getColumnConstraints().add(cc);
+    }
+    for (int l = 0; l < lignes; l++) {
+        RowConstraints rc = new RowConstraints(tailleCase);
+        grillePlateau.getRowConstraints().add(rc);
+    }
+
+    for (int l = 0; l < lignes; l++) {
         for (int c = 0; c < cols; c++) {
-            ColumnConstraints cc = new ColumnConstraints(TAILLE_CASE);
-            grillePlateau.getColumnConstraints().add(cc);
+            TypeCase tc = jeu.getCase(l, c);
+            grillePlateau.add(creerCellule(tc, tailleCase), c, l);
         }
-        for (int l = 0; l < lignes; l++) {
-            RowConstraints rc = new RowConstraints(TAILLE_CASE);
-            grillePlateau.getRowConstraints().add(rc);
-        }
-
-        // Remplir les cases
-        for (int l = 0; l < lignes; l++) {
-            for (int c = 0; c < cols; c++) {
-                TypeCase tc = jeu.getCase(l, c);
-                StackPane cellule = creerCellule(tc);
-                grillePlateau.add(cellule, c, l); // attention : add(node, col, row)
-            }
-        }
-
-        // Masquer l'overlay quand on recharge
-        overlayMessage.setVisible(false);
-
-        // ← Redimensionner la fenêtre après que la grille soit construite
-    Platform.runLater(() -> {
-        Stage stage = (Stage) grillePlateau.getScene().getWindow();
-        stage.sizeToScene(); // ajuste la fenêtre exactement à la taille du contenu
-    });
     }
 
-    private StackPane creerCellule(TypeCase tc) {
-        StackPane cell = new StackPane();
-        cell.setPrefSize(TAILLE_CASE, TAILLE_CASE);
+    overlayMessage.setVisible(false);
+}
 
-        // Choisir la classe CSS selon le type de case
-        switch (tc) {
-            case MUR:             cell.getStyleClass().add("case-mur");    break;
-            case SOL:             cell.getStyleClass().add("case-sol");    break;
-            case VIDE:            cell.getStyleClass().add("case-vide");   break;
-            case CIBLE:           cell.getStyleClass().add("case-cible");  break;
-            case CAISSE:          cell.getStyleClass().add("case-caisse"); break;
-            case CAISSE_SUR_CIBLE:cell.getStyleClass().add("case-caisse-ok"); break;
-            case JOUEUR:cell.getStyleClass().add("case-joueur"); break;
-            case JOUEUR_SUR_CIBLE:cell.getStyleClass().add("case-joueur"); break;
-        }
-        return cell;
+private StackPane creerCellule(TypeCase tc, double tailleCase) {
+    StackPane cell = new StackPane();
+    cell.setPrefSize(tailleCase, tailleCase);
+    cell.setMinSize(tailleCase, tailleCase);
+    cell.setMaxSize(tailleCase, tailleCase);
+
+    switch (tc) {
+        case MUR:              cell.getStyleClass().add("case-mur");       break;
+        case SOL:              cell.getStyleClass().add("case-sol");       break;
+        case VIDE:             cell.getStyleClass().add("case-vide");      break;
+        case CIBLE:            cell.getStyleClass().add("case-cible");     break;
+        case CAISSE:           cell.getStyleClass().add("case-caisse");    break;
+        case CAISSE_SUR_CIBLE: cell.getStyleClass().add("case-caisse-ok"); break;
+        case JOUEUR:
+        case JOUEUR_SUR_CIBLE: cell.getStyleClass().add("case-joueur");    break;
     }
+    return cell;
+}
+
 
     // ========== Mise à jour des infos ==========
 
@@ -246,41 +264,49 @@ public class SokobanController implements Initializable{
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        
-    }
+public void initialize(URL location, ResourceBundle resources) {
+    grillePlateau.sceneProperty().addListener((obs, oldScene, newScene) -> {
+        if (newScene != null) {
+            newScene.widthProperty().addListener((o, ov, nv) -> Platform.runLater(() -> afficherGrille()));
+            newScene.heightProperty().addListener((o, ov, nv) -> Platform.runLater(() -> afficherGrille()));
+            Platform.runLater(() -> {
+                afficherGrille();
+                mettreAJourInfos();
+                if (premiereAffichage) {
+                    Stage stage = (Stage) grillePlateau.getScene().getWindow();
+                    stage.sizeToScene();
+                    premiereAffichage = false;
+                }
+            });
+        }
+    });
+}
 
-    public void setJeuSokoban(){
-        jeu = new JeuSokoban(
-        NiveauxSokoban.getNiveaux(),NiveauxSokoban.getNoms(),0);
-        afficherGrille();
-        mettreAJourInfos();
-    }
+    public void setJeuSokoban() {
+    jeu = new JeuSokoban(NiveauxSokoban.getNiveaux(), NiveauxSokoban.getNoms(), 0);
+    rafraichir();
+}
 
-    public void setJeuTutoriel(){
-        jeu = new JeuSokoban(
-            NiveauxTutoriel.getNiveaux(),
-            NiveauxTutoriel.getNoms(),
-            0
-        );
-        afficherGrille();
-        mettreAJourInfos();
-    }
+public void setJeuTutoriel() {
+    jeu = new JeuSokoban(NiveauxTutoriel.getNiveaux(), NiveauxTutoriel.getNoms(), 0);
+    rafraichir();
+}
 
-    public void setJeuTutoriel(Path nomDossier){
-        
-        jeu = new JeuSokoban(
-            LoaderNiveauxXSB.chargerDepuisDossier(nomDossier).niveaux,
-            LoaderNiveauxXSB.chargerDepuisDossier(nomDossier).noms,
-            0
-        );
-        afficherGrille();
-        mettreAJourInfos();
-    }
+public void setJeuTutoriel(Path nomDossier) {
+    LoaderNiveauxXSB.Banque banque = LoaderNiveauxXSB.chargerDepuisDossier(nomDossier);
+    jeu = new JeuSokoban(banque.niveaux, banque.noms, 0);
+    rafraichir();
+}
 
 
 
     public void setSokobanApp(SokobanApp app){
         this.app = app;
     }
+
+    private void rafraichir() {
+    if (jeu == null) return;
+    afficherGrille();
+    mettreAJourInfos();
+}
 }
