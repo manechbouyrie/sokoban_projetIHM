@@ -28,6 +28,7 @@
             <GridPane fx:id="grillePlateau" alignment="CENTER" />
             <!-- Overlay victoire/défaite -->
             <VBox fx:id="overlayMessage" alignment="CENTER" styleClass="overlay" visible="false">
+            <Label fx:id="image" text="image" />
                 <Label fx:id="labelMessage" styleClass="message-fin" />
                 <Button fx:id="btnAction" onAction="#onNiveauSuivant" text="Niveau suivant" />
             </VBox>
