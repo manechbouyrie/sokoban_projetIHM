@@ -109,7 +109,7 @@ public class SokobanController implements Initializable{
         // Gérer la fin de partie
         if (jeu.isNiveauTermine()) {
             if (jeu.estDernierNiveau()) {
-                labelMessage.setText("🎉 Bravo, dernier niveau réussi !");
+                labelMessage.setText("");
                 btnAction.setText("Retour au début");
             } else {
                 labelMessage.setText("");
