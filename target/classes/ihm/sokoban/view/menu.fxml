@@ -2,60 +2,65 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ihm.sokoban.util.menuController">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ihm.sokoban.util.menuController">
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
+            <Label contentDisplay="CENTER" text="Jeu sokoban">
+               <font>
+                  <Font size="41.0" />
+               </font>
+            </Label>
             <Button mnemonicParsing="false" onAction="#lauchTutoriel" prefHeight="3000.0" prefWidth="3000.0" text="Niveau tutoriel">
                <VBox.margin>
-                  <Insets bottom="25.0" left="50.0" right="50.0" top="50.0" />
+                  <Insets bottom="15.0" left="50.0" right="50.0" top="15.0" />
                </VBox.margin>
             </Button>
             <Button mnemonicParsing="false" onAction="#lauchSokoban" prefHeight="3000.0" prefWidth="3000.0" text="Niveau sokoban">
                <VBox.margin>
-                  <Insets bottom="25.0" left="50.0" right="50.0" top="25.0" />
+                  <Insets bottom="15.0" left="50.0" right="50.0" top="15.0" />
                </VBox.margin>
             </Button>
             <Button mnemonicParsing="false" onAction="#lauchCharger" prefHeight="3000.0" prefWidth="3000.0" text="Charger">
                <VBox.margin>
-                  <Insets bottom="50.0" left="50.0" right="50.0" top="25.0" />
+                  <Insets bottom="30.0" left="50.0" right="50.0" top="15.0" />
                </VBox.margin>
             </Button>
          </children>
       </VBox>
    </center>
    <bottom>
-      <Button mnemonicParsing="false" text="Credit" BorderPane.alignment="CENTER_RIGHT">
+      <Button mnemonicParsing="false" onAction="#onCredit" text="Credit" BorderPane.alignment="CENTER_RIGHT">
          <BorderPane.margin>
             <Insets bottom="10.0" right="10.0" />
          </BorderPane.margin>
       </Button>
    </bottom>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#lauchTutoriel" text="Niveau tutoriel" />
+                  <MenuItem mnemonicParsing="false" onAction="#lauchSokoban" text="Niveau sokoban" />
+                  <MenuItem mnemonicParsing="false" onAction="#lauchCharger" text="Charger" />
+              <MenuItem mnemonicParsing="false" onAction="#onQuitter" text="Quiter" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#onRegle" text="Règle" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
 </BorderPane>

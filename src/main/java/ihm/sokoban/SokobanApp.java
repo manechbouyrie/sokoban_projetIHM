@@ -9,15 +9,22 @@ import ihm.sokoban.model.Direction;
 import ihm.sokoban.util.SokobanController;
 import ihm.sokoban.util.menuController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -30,7 +37,7 @@ public class SokobanApp extends Application {
 	private Stage primaryStage;
 
     @Override
-public void start(Stage primaryStage){
+    public void start(Stage primaryStage){
     
     this.primaryStage = primaryStage;
 	this.rootPane     = new BorderPane();
@@ -42,7 +49,7 @@ public void start(Stage primaryStage){
 
 	loadmenu();
 	//showSaisieMembre(); // affichage temporaire pour validation
-
+    primaryStage.setOnCloseRequest(event -> Quitter(event)); // Appelle la méthode de confirmation
 	primaryStage.show();
     
 }
@@ -90,12 +97,11 @@ public void start(Stage primaryStage){
             alert.showAndWait();
         }
         }
-
+        ctrl.setSokobanApp(this);
         dialogStage.showAndWait();
 
     }catch(Exception e){
-        System.out.println(e);
-        e.printStackTrace();
+        marchePas();
     }
     }
 
@@ -112,7 +118,7 @@ public void start(Stage primaryStage){
 			this.rootPane.setCenter( vueListe );
 						
 		} catch (IOException e) {
-			System.out.println("Ressource FXML non disponible : ListeMembres");
+            marchePas();
 			System.exit(1);
 		}	
 	}
@@ -147,6 +153,50 @@ public void start(Stage primaryStage){
         
         return Optional.of(selectedFile.toPath());
     }
+
+    public Dialog<ButtonType> getPrimaryStage() {
+        throw new UnsupportedOperationException("Unimplemented method 'getPrimaryStage'");
+    }
+
+    public void Quitter(Event event) {
+    
+    var resource = getClass().getResourceAsStream("/ihm/sokoban/image/quiter.jpg");
+
+    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+    confirm.setTitle("Quitter");
+    confirm.setHeaderText("On part déja ? (mental de défaitiste)");
+    ImageView imageView = new ImageView(new Image(resource));
+        imageView.setFitWidth(150);
+        imageView.setFitHeight(150);
+        confirm.setGraphic(imageView);
+
+    ButtonType btnOui = new ButtonType("Oui");
+    ButtonType btnNon = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+    confirm.getButtonTypes().setAll(btnOui, btnNon);
+
+    Optional<ButtonType> result = confirm.showAndWait();
+    if (result.isPresent() && result.get() == btnOui) {
+        Platform.exit();
+        System.exit(0);
+    } else {
+        event.consume();
+    }
+}
+
+    private void marchePas(){
+
+        var resource = getClass().getResourceAsStream("/ihm/sokoban/image/marchepas.jpg");
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sa marche pas !");
+            alert.setHeaderText(null);
+            ImageView imageView = new ImageView(new Image(resource));
+            imageView.setFitWidth(150);
+            imageView.setFitHeight(150);
+            alert.setGraphic(imageView);
+            alert.showAndWait();
+    }
+
+
 }
 
 

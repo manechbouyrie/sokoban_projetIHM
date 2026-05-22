@@ -2,12 +2,19 @@ package ihm.sokoban.util;
 
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
+import ihm.sokoban.SokobanApp;
 import ihm.sokoban.model.*;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -26,6 +33,8 @@ public class SokobanController implements Initializable{
     private Label     labelMessage;
     @FXML 
     private Button    btnAction;
+
+    private SokobanApp app;
 
     // --- Modèle ---
     private JeuSokoban jeu;
@@ -77,16 +86,8 @@ public class SokobanController implements Initializable{
             case CIBLE:           cell.getStyleClass().add("case-cible");  break;
             case CAISSE:          cell.getStyleClass().add("case-caisse"); break;
             case CAISSE_SUR_CIBLE:cell.getStyleClass().add("case-caisse-ok"); break;
-            case JOUEUR:
-            case JOUEUR_SUR_CIBLE:
-                cell.getStyleClass().add(
-                    tc == TypeCase.JOUEUR_SUR_CIBLE ? "case-cible" : "case-sol"
-                );
-                // Ajouter un emoji ou label joueur par-dessus
-                Label joueur = new Label("🧑");
-                joueur.setStyle("-fx-font-size: 36;");
-                cell.getChildren().add(joueur);
-                break;
+            case JOUEUR:cell.getStyleClass().add("case-joueur"); break;
+            case JOUEUR_SUR_CIBLE:cell.getStyleClass().add("case-joueur"); break;
         }
         return cell;
     }
@@ -112,9 +113,26 @@ public class SokobanController implements Initializable{
             }
             overlayMessage.setVisible(true);
         } else if (jeu.isPerdu()) {
-            labelMessage.setText("❌ Caisse coincée ! Annulez ou recommencez.");
-            btnAction.setText("🔄 Recommencer");
-            overlayMessage.setVisible(true);
+        var resource = getClass().getResourceAsStream("/ihm/sokoban/image/perdu.jpg");
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Perdu");
+        confirm.setHeaderText("NOOOOOOOOOOOOOOOON !");
+        ImageView imageView = new ImageView(new Image(resource));
+        imageView.setFitWidth(150);
+        imageView.setFitHeight(150);
+        confirm.setGraphic(imageView);
+
+        ButtonType btnOui = new ButtonType("Recommencer");
+        ButtonType btnNon = new ButtonType("Quiter", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(btnOui, btnNon);
+
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == btnOui) {
+        this.recommencer();
+    } else {
+        app.Quitter(null);
+    }
         }
     }
 
@@ -128,7 +146,7 @@ public class SokobanController implements Initializable{
             case UP:    case Z: dir = Direction.HAUT;   break;
             case DOWN:  case S: dir = Direction.BAS;    break;
             case LEFT:  case Q: dir = Direction.GAUCHE; break;
-            case RIGHT: case D: dir = Direction.DROITE; break;
+            case RIGHT: case D: dir = Direction.DROITE;  break;
             case R:  onRecommencer(); return;
             default: return;
         }
@@ -147,6 +165,7 @@ public class SokobanController implements Initializable{
 
     public void recommencer(){
         this.onRecommencer();
+        this.onPrecedent();
     }
 
     public void annuler(){
@@ -169,6 +188,7 @@ public class SokobanController implements Initializable{
         jeu.reset();
         afficherGrille();
         mettreAJourInfos();
+        this.onPrecedent();
     }
 
     @FXML 
@@ -249,5 +269,11 @@ public class SokobanController implements Initializable{
         );
         afficherGrille();
         mettreAJourInfos();
+    }
+
+
+
+    public void setSokobanApp(SokobanApp app){
+        this.app = app;
     }
 }
