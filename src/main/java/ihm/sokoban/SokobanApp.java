@@ -10,8 +10,6 @@ import ihm.sokoban.util.SokobanController;
 import ihm.sokoban.util.menuController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -158,7 +156,7 @@ public class SokobanApp extends Application {
         throw new UnsupportedOperationException("Unimplemented method 'getPrimaryStage'");
     }
 
-    public void Quitter(Event event) {
+    public int Quitter(Event event) {
     
     var resource = getClass().getResourceAsStream("/ihm/sokoban/image/quiter.jpg");
 
@@ -179,11 +177,14 @@ public class SokobanApp extends Application {
         Platform.exit();
         System.exit(0);
     } else {
-        event.consume();
+        if (event != null) {
+        event.consume();}
+        return 1;
     }
+    return 0;
 }
 
-    private void marchePas(){
+    public void marchePas(){
 
         var resource = getClass().getResourceAsStream("/ihm/sokoban/image/marchepas.jpg");
         Alert alert = new Alert(Alert.AlertType.ERROR);

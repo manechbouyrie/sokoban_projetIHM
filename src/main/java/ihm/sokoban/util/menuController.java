@@ -1,16 +1,16 @@
 package ihm.sokoban.util;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import ihm.sokoban.SokobanApp;
-import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-
-import javafx.scene.control.Label;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -86,6 +86,45 @@ public class menuController implements Initializable{
     @FXML
     private void onQuitter(){
         parent.Quitter(null);
+    }
+
+    @FXML
+    private void onClickMe(){
+
+    var resource = getClass().getResourceAsStream("/ihm/sokoban/image/clickme.jpg");
+
+    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+    confirm.setTitle("Bonjour monsieur, ...");
+    confirm.setHeaderText("Donner moi un point en plus ! Je vous en supplie !");
+    ImageView imageView = new ImageView(new Image(resource));
+        imageView.setFitWidth(150);
+        imageView.setFitHeight(150);
+        confirm.setGraphic(imageView);
+
+    ButtonType btnOui = new ButtonType("Oui");
+    ButtonType btnNon = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+    confirm.getButtonTypes().setAll(btnOui, btnNon);
+
+    Optional<ButtonType> result = confirm.showAndWait();
+    if (result.isPresent() && result.get() == btnOui) {
+        ilestdaccor();
+    }
+    else{
+        parent.marchePas();}
+    }
+
+    private void ilestdaccor(){
+        var resource = getClass().getResourceAsStream("/ihm/sokoban/image/ilestdaccor.gif");
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Merci !");
+        alert.setHeaderText("Vous êtes vraiment gentil !");
+        ImageView imageView = new ImageView(new Image(resource));
+        imageView.setFitWidth(150);
+        imageView.setFitHeight(150);
+        alert.setGraphic(imageView);
+
+        alert.showAndWait();
     }
 
 }

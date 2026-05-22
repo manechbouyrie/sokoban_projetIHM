@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -45,22 +46,27 @@
       </Button>
    </bottom>
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-                  <MenuItem mnemonicParsing="false" onAction="#lauchTutoriel" text="Niveau tutoriel" />
-                  <MenuItem mnemonicParsing="false" onAction="#lauchSokoban" text="Niveau sokoban" />
-                  <MenuItem mnemonicParsing="false" onAction="#lauchCharger" text="Charger" />
-              <MenuItem mnemonicParsing="false" onAction="#onQuitter" text="Quiter" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#onRegle" text="Règle" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+      <SplitPane dividerPositions="0.5" prefHeight="0.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <items>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#lauchTutoriel" text="Niveau tutoriel" />
+                        <MenuItem mnemonicParsing="false" onAction="#lauchSokoban" text="Niveau sokoban" />
+                        <MenuItem mnemonicParsing="false" onAction="#lauchCharger" text="Charger" />
+                    <MenuItem mnemonicParsing="false" onAction="#onQuitter" text="Quiter" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#onRegle" text="Règle" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Button mnemonicParsing="false" onAction="#onClickMe" text="Click me" />
+        </items>
+      </SplitPane>
    </top>
 </BorderPane>

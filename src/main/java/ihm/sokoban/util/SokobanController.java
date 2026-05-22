@@ -8,8 +8,6 @@ import java.util.ResourceBundle;
 import ihm.sokoban.SokobanApp;
 import ihm.sokoban.model.*;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -72,6 +70,12 @@ public class SokobanController implements Initializable{
 
         // Masquer l'overlay quand on recharge
         overlayMessage.setVisible(false);
+
+        // ← Redimensionner la fenêtre après que la grille soit construite
+    Platform.runLater(() -> {
+        Stage stage = (Stage) grillePlateau.getScene().getWindow();
+        stage.sizeToScene(); // ajuste la fenêtre exactement à la taille du contenu
+    });
     }
 
     private StackPane creerCellule(TypeCase tc) {
@@ -108,10 +112,11 @@ public class SokobanController implements Initializable{
                 labelMessage.setText("🎉 Bravo, dernier niveau réussi !");
                 btnAction.setText("Retour au début");
             } else {
-                labelMessage.setText("✅ Niveau réussi !");
+                labelMessage.setText("");
                 btnAction.setText("Niveau suivant ❯");
             }
             overlayMessage.setVisible(true);
+            btnAction.requestFocus();
         } else if (jeu.isPerdu()) {
         var resource = getClass().getResourceAsStream("/ihm/sokoban/image/perdu.jpg");
 
@@ -129,9 +134,13 @@ public class SokobanController implements Initializable{
 
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == btnOui) {
-        this.recommencer();
+        this.onRecommencer();
+        
     } else {
-        app.Quitter(null);
+        int i = app.Quitter(null);
+        if (i == 1) {
+            this.onRecommencer();
+        }
     }
         }
     }
@@ -165,7 +174,6 @@ public class SokobanController implements Initializable{
 
     public void recommencer(){
         this.onRecommencer();
-        this.onPrecedent();
     }
 
     public void annuler(){
@@ -188,7 +196,6 @@ public class SokobanController implements Initializable{
         jeu.reset();
         afficherGrille();
         mettreAJourInfos();
-        this.onPrecedent();
     }
 
     @FXML 

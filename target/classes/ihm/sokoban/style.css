@@ -18,9 +18,15 @@
                   -fx-border-color: #1b5e20; -fx-border-width: 2; }
 
 .overlay {
-    -fx-background-color: rgb(255, 255, 255);
+    -fx-background-image: url("/ihm/sokoban/image/gagner.jpg");
+    -fx-background-size: 700px 700px;  /* largeur hauteur */
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #ffffff;
     -fx-padding: 30;
     -fx-spacing: 15;
+    -fx-min-width: 64px;
+    -fx-min-height: 64px;
 }
 .message-fin { -fx-font-size: 22; -fx-text-fill: white; -fx-font-weight: bold; }
 .titre-niveau { -fx-font-size: 16; -fx-font-weight: bold; }
